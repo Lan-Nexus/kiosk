@@ -1,0 +1,20 @@
+{
+  "name": "kiosk-app",
+  "version": "1.0.0",
+  "description": "Fullscreen kiosk app that cycles through websites",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "keywords": [
+    "kiosk",
+    "electron",
+    "fullscreen"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^27.0.0"
+  }
+}
