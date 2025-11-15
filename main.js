@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 let mainWindow;
+let overlayWindow;
 let browserViews = [];
 let currentIndex = 0;
 let config;
@@ -12,6 +13,33 @@ function loadConfig() {
   const configPath = path.join(__dirname, 'config.json');
   const configData = fs.readFileSync(configPath, 'utf8');
   config = JSON.parse(configData);
+}
+
+function createOverlay() {
+  overlayWindow = new BrowserWindow({
+    width: 500,
+    height: 500,
+    x: 0,
+    y: 0,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+    }
+  });
+
+  overlayWindow.loadFile('overlay.html');
+  overlayWindow.setIgnoreMouseEvents(true);
+
+  // Position in top right corner
+  const { screen } = require('electron');
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width } = primaryDisplay.workAreaSize;
+  overlayWindow.setPosition(0, 0);
 }
 
 function createWindow() {
@@ -81,10 +109,12 @@ function startCycling() {
 app.whenReady().then(() => {
   loadConfig();
   createWindow();
+  createOverlay();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
+      createOverlay();
     }
   });
 });
